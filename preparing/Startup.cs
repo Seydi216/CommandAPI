@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using preparing.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,6 +20,7 @@ namespace preparing {
 
         public void ConfigureServices(IServiceCollection services) {
             services.AddControllers();
+            services.AddScoped<ICommandAPIRepo, MockCommandAPIRepo>();
         }
 
 
