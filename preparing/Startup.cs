@@ -1,3 +1,4 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -26,11 +27,12 @@ namespace preparing {
                 Configuration.GetConnectionString("PostgreSqlConnection");
             builder.Username = Configuration["UserID"];
             builder.Password = Configuration["Password"];
-            
+            services.AddDbContext<CommandContext>(opt => opt.UseNpgsql(builder.ConnectionString));
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddControllers();
             //services.AddScoped<ICommandAPIRepo, MockCommandAPIRepo>();
             services.AddScoped<ICommandAPIRepo, SqlCommandAPIRepo>();
-            services.AddDbContext<CommandContext>(opt => opt.UseNpgsql(builder.ConnectionString));
+            
         }
 
 
