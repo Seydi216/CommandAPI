@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -11,16 +12,19 @@ using System.Threading.Tasks;
 
 namespace preparing {
     public class Startup {
+
+        public IConfiguration Configuration { get; }
         public Startup(IConfiguration configuration) {
             Configuration = configuration;
         }
 
-        public IConfiguration Configuration { get; }
-
 
         public void ConfigureServices(IServiceCollection services) {
             services.AddControllers();
-            services.AddScoped<ICommandAPIRepo, MockCommandAPIRepo>();
+            //services.AddScoped<ICommandAPIRepo, MockCommandAPIRepo>();
+            services.AddScoped<ICommandAPIRepo, SqlCommandAPIRepo>();
+            services.AddDbContext<CommandContext>(opt => opt.UseNpgsql
+            (Configuration.GetConnectionString("PostgreSqlConnection")));
         }
 
 
