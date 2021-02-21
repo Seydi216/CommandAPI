@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Newtonsoft.Json.Serialization;
 using Npgsql;
 using preparing.Data;
 using System;
@@ -29,9 +30,12 @@ namespace preparing {
             builder.Password = Configuration["Password"];
             services.AddDbContext<CommandContext>(opt => opt.UseNpgsql(builder.ConnectionString));
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-            services.AddControllers();
             //services.AddScoped<ICommandAPIRepo, MockCommandAPIRepo>();
             services.AddScoped<ICommandAPIRepo, SqlCommandAPIRepo>();
+            services.AddControllers().AddNewtonsoftJson(s => {
+                s.SerializerSettings.ContractResolver = new
+                CamelCasePropertyNamesContractResolver();
+            });
             
         }
 
